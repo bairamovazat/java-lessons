@@ -1,8 +1,6 @@
 package ru.azat.lessons;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Graph {
     private int[][] lenMap;
@@ -51,14 +49,12 @@ public class Graph {
         }
 
         for (int nextNode : nextNodes) {
-            if (canGo(nextNode, end, visitedNodes)){
+            if (canGo(nextNode, end, visitedNodes)) {
                 return true;
             }
         }
         return false;
     }
-
-
 
     public List<Integer> getDekstor(int start) {
         List<Integer> calculated = new ArrayList<Integer>();
@@ -67,16 +63,25 @@ public class Graph {
         return calculated;
     }
 
-
     public void getDekstor(int currentElement, int currentLength, List<Integer> calculated) {
         for (int i = 0; i < getLenMap()[currentElement].length; i++) {
             if (currentElement != i && getLenMap()[currentElement][i] != 0) {
+
                 int lengthToNextElement = currentLength + getLenMap()[currentElement][i];
-                if(calculated.size() <= i || calculated.get(i) > lengthToNextElement){
-                    calculated.set(i, lengthToNextElement);
+
+                if (calculated.size() <= i || calculated.get(i) > lengthToNextElement) {
+                    addOrSetToArray(calculated, i, lengthToNextElement);
                     getDekstor(i, lengthToNextElement, calculated);
                 }
             }
+        }
+    }
+
+    private static void addOrSetToArray(List<Integer> collection, int index, Integer value){
+        if(collection.size() <= index){
+            collection.add(index, value);
+        }else{
+            collection.set(index, value);
         }
     }
 
