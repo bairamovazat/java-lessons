@@ -30,12 +30,22 @@ public class Polynomial {
         return this.coefficients.length;
     }
 
-    public double getX(double x) {
+    public double getFunctionResult(double x) {
         double result = 0;
         for (int i = 0; i < coefficients.length; i++) {
             result += coefficients[i] * Math.pow(x, i);
         }
         return result;
+    }
+
+    public int getLastIndex() {
+        int lastCoeff = coefficients.length;
+        for (int i = 0; i < coefficients.length; i++) {
+            if (getCoefficient(i) != 0) {
+                lastCoeff = i;
+            }
+        }
+        return lastCoeff;
     }
 
     //Делает поэлементно оперицию
@@ -63,12 +73,47 @@ public class Polynomial {
         return result;
     }
 
+    //Делает поэлементно оперицию
+    private Polynomial elementwise(double number, boolean isSum) {
+        Polynomial result = new Polynomial(getLength());
+
+        for (int i = 0; i < getLength(); i++) {
+                double newValue = isSum ?
+                        this.getCoefficient(i) + this.getCoefficient(i) :
+                        this.getCoefficient(i) - this.getCoefficient(i);
+                result.setCoefficient(i, newValue);
+        }
+        return result;
+    }
+
+
     public Polynomial sum(Polynomial polynomial) {
         return elementwise(polynomial, true);
     }
 
     public Polynomial minus(Polynomial polynomial) {
         return elementwise(polynomial, false);
+    }
+
+    public Polynomial sum(double number) {
+        return elementwise(number, true);
+    }
+
+    public Polynomial minus(double number) {
+        return elementwise(number, false);
+    }
+
+    public Polynomial multiple(Polynomial polynomial){
+        Polynomial result = new Polynomial(polynomial.getLastIndex() + 1 + this.getLastIndex());
+        double previousValue;
+        for (int i = 0; i <= this.getLastIndex(); i++){
+            for (int j = 0; j <= polynomial.getLastIndex(); j++){
+                previousValue = result.getCoefficient(i + j);
+                result.setCoefficient(i + j,
+                        previousValue + polynomial.getCoefficient(j) * this.getCoefficient(i));
+            }
+        }
+        return result;
     }
 
     @Override
